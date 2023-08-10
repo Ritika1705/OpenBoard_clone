@@ -96,11 +96,11 @@ body{
 }
 
 .blue{
-    background-color: rgb(7, 165, 244);
+    background-color: blue;
 }
 
-.green{
-    background-color: greenyellow;
+.red{
+    background-color: red;
 }
 
 .eraser-tool-cont{

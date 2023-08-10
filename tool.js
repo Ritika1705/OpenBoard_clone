@@ -9,6 +9,7 @@ let pencil = document.querySelector(".pencil");
 let eraser = document.querySelector(".eraser");
 let sticky_note = document.querySelector(".sticky_note");
 let upload = document.querySelector(".upload");
+let download = document.querySelector(".download");
 
 let pencilFlag = false;
 let eraserFlag = false;
@@ -184,3 +185,10 @@ function drag_and_drop(ele, event)
     ele.onmouseup = null;
     };
 }
+
+download.addEventListener("click", (e) => {
+    var a = document.createElement("a");
+    a.href = canvas.toDataURL("image/jpg");
+    a.download = "canvas.jpg";
+    a.click();
+})
