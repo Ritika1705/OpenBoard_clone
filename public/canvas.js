@@ -33,11 +33,17 @@ pencil_width.addEventListener("change", (e) => {
 })
 
 undo.addEventListener("click", (e) => {
+    alert("undo track" + track);
     if(track > 0)
     {
         track--;
     }
-    drawoncanvas(track);
+    let data = {
+        trackValue: track,
+        undoredotracker
+    }
+    socket.emit("redoundo",data);
+    //drawoncanvas(track);
 })
 
 redo.addEventListener("click", (e) => {
@@ -45,7 +51,12 @@ redo.addEventListener("click", (e) => {
     {
         track++;
     }
-    drawoncanvas(track);
+    let data = {
+        trackValue: track,
+        undoredotracker
+    }
+    socket.emit("redoundo",data);
+    //drawoncanvas(track);
 })
 
 function drawoncanvas(idx)
@@ -89,16 +100,29 @@ tool.strokeStyle = pencilColor;
 tool.lineWidth = pencilWidth;
 
 canvas.addEventListener("mousedown", (e) => {
-    tool.beginPath();
+    //tool.beginPath();
     drawing = true;
-    tool.moveTo(e.clientX, e.clientY);
+    //tool.moveTo(e.clientX, e.clientY);
+    let data = {
+        x: e.clientX,
+        y: e.clientY
+    }
+    socket.emit("beginPath", data);
 })
 
 canvas.addEventListener("mousemove", (e) => {
     if(drawing)
     {
-        tool.lineTo(e.clientX, e.clientY);
-        tool.stroke();
+        let data = {
+            x: e.clientX,
+            y: e.clientY,
+            color: eraserFlag? eraserColor:pencilColor,
+            width: eraserFlag? eraserWidth:pencilWidth
+        }
+
+        socket.emit("drawStroke",data);
+        //tool.lineTo(e.clientX, e.clientY);
+        //tool.stroke();
     }
     
 })
@@ -110,4 +134,20 @@ canvas.addEventListener("mouseup" , (e) => {
     undoredotracker.push(url);
     track = undoredotracker.length - 1;
     console.log(track);
+})
+
+socket.on("beginPath",(data) => {
+    tool.beginPath();
+    tool.moveTo(data.x,data.y);
+})
+
+socket.on("drawStroke",(data) => {
+    tool.lineTo(data.x,data.y);
+    tool.strokeStyle = data.color;
+    tool.lineWidth = data.width;
+    tool.stroke();
+})
+
+socket.on("redoundo", (data) => {
+    drawoncanvas(data.trackValue); 
 })
