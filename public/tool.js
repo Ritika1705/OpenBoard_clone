@@ -157,7 +157,7 @@ function stickyActions(minimize_button, remove_button, stickyCont)
 function drag_and_drop(ele, event)
 {
     ele.style.position = 'absolute';
-    ele.style.zIndex = 1000;
+    ele.style.zIndex = "1000";
 
     // move it out of any current parents directly into body
     // to make it positioned relative to the body
